@@ -57,4 +57,4 @@ WHERE cl.Percentage > ALL (
 	);
 	
 # 5.
-SELECT 
+SELECT DISTINCT country.Region
