@@ -1,0 +1,46 @@
+{
+	"folders": {},
+	"connections": {
+		"mysql8-191c98b81a1-5df79ae960abdfe0": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "localhost",
+			"save-password": true,
+			"configuration": {
+				"host": "localhost",
+				"port": "3306",
+				"url": "jdbc:mysql://localhost:3306/",
+				"configurationType": "MANUAL",
+				"home": "/usr",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"properties": {
+					"connectTimeout": "20000",
+					"rewriteBatchedStatements": "true",
+					"enabledTLSProtocols": "TLSv1,TLSv1.1,TLSv1.2,TLSv1.3",
+					"allowPublicKeyRetrieval": "true"
+				},
+				"auth-model": "native"
+			},
+			"extensions": {
+				"dashboards": "\u003cdashboardList\u003e\u003cdashboards id\u003d\"default\" name\u003d\"Default\"\u003e\u003cview/\u003e\u003c/dashboards\u003e\u003c/dashboardList\u003e"
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false,
+			"smart-commit-recover": true,
+			"auto-close-transactions": true,
+			"close-transactions-period": 1800,
+			"auto-close-connections": true,
+			"close-connections-period": 14400
+		}
+	}
+}
