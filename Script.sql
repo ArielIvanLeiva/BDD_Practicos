@@ -1,7 +1,7 @@
 USE world;
 
-# 1.
-SELECT city.Name, cityCountry.Name
+# 1. NOTA: Está bueno agregar los renombres (sobretodo cuando no se va a usar la tabla)
+SELECT city.Name AS City, cityCountry.Name AS Country
 FROM city
 INNER JOIN 
 			(SELECT country.Name, country.Code FROM country WHERE country.Population < 10000) 
@@ -98,6 +98,7 @@ WHERE city.Population = (
 	LIMIT 1
 );
 
+
 # AYUDAAAAAAa SELECT country.Name, city.Population
 #FROM country; 
 
@@ -119,5 +120,22 @@ WHERE countrylanguage.Percentage > (
 
 # 8.
 SELECT country.Region, SUM(Population) as Population
+FROM country
+GROUP BY country.Region;
+
+# 9. OBSERVACIÓN: El WHERE se aplica ANTES de que se calcule el promedio (sobre el dataset inicial)
+SELECT country.Region, AVG(country.LifeExpectancy)
+FROM country
+WHERE 40 <= country.LifeExpectancy AND country.LifeExpectancy <= 70
+GROUP BY country.Region;
+
+# 9, Esto, a diferencia de lo anterior, se aplica al valor del promedio (luego del group)
+SELECT country.Region, AVG(country.LifeExpectancy) AS AverageLE
+FROM country
+GROUP BY country.Region
+HAVING 40 <= AverageLE AND AverageLE <= 70;
+
+# 10.
+SELECT country.Region, MIN(Population), MAX(Population), SUM(Population)
 FROM country
 GROUP BY country.Region;
