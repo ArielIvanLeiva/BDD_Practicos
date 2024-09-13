@@ -1,1 +1,1 @@
-{"resources":{"Script.sql":{"default-datasource":"mysql8-191c98b81a1-5df79ae960abdfe0"}}}
+{"resources":{"Scripts/p5.sql":{"default-datasource":"mysql8-191c98b81a1-5df79ae960abdfe0"},"Scripts/sakila-data.sql":{"default-datasource":"mysql8-191c98b81a1-5df79ae960abdfe0"},"Scripts/sakila-schema.sql":{"default-datasource":"mysql8-191c98b81a1-5df79ae960abdfe0"},"p4.sql":{"default-datasource":"mysql8-191c98b81a1-5df79ae960abdfe0"}}}

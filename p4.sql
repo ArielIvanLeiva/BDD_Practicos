@@ -99,6 +99,14 @@ WHERE city.Population = (
 );
 
 
+# 6. Usando group by
+SELECT country.Name, city.Name, MAX(city.Population)
+FROM country
+INNER JOIN city
+ON city.CountryCode = country.Code
+GROUP BY country.Code;
+
+
 # AYUDAAAAAAa SELECT country.Name, city.Population
 #FROM country; 
 
@@ -136,6 +144,12 @@ GROUP BY country.Region
 HAVING 40 <= AverageLE AND AverageLE <= 70;
 
 # 10.
-SELECT country.Region, MIN(Population), MAX(Population), SUM(Population)
-FROM country
-GROUP BY country.Region;
+SELECT
+	country.Region,
+	MIN(Population),
+	MAX(Population),
+	SUM(Population)
+FROM
+	country
+GROUP BY
+	country.Region;
