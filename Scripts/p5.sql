@@ -88,3 +88,18 @@ SELECT customer_id, SUM(payment.amount)
 	GROUP BY payment.customer_id
 	ORDER BY SUM(payment.amount) DESC
 	LIMIT 10;
+describe film;
+# 5.
+SELECT film.title, rating, COUNT(inventory.film_id) AS amount
+FROM inventory
+INNER JOIN film
+ON film.film_id = inventory.film_id
+GROUP BY film.film_id
+ORDER BY COUNT(inventory.film_id) DESC;
+
+# 6.
+SELECT MIN(payment_date) AS first_date, MAX(payment_date) AS last_date
+FROM payment;
+
+# 7.
+SELECT EXTRACT(MONTH FROM '2020-03-01');
