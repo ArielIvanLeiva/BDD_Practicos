@@ -203,3 +203,15 @@ REVOKE delete ON rental FROM employee;
 
 CREATE ROLE administrator;
 GRANT ALL PRIVILEGES ON sakila.* TO administrator;
+
+DROP ROLE administrator;
+
+# 15.
+CREATE ROLE empleado_bajo;
+GRANT employee TO empleado_bajo;
+
+CREATE ROLE empleado_alto;
+GRANT administrator TO empleado_alto;
+
+CREATE USER pepe;
+GRANT administrator TO pepe;
