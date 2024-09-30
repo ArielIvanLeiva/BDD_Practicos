@@ -133,19 +133,18 @@ END $$
 DELIMITER;
 
 # 5.
-CREATE VIEW `Premium Customers` AS 
+CREATE VIEW `Premium Customers` AS
 SELECT customers.customerName, customers.city, SUM(payments.amount)
 FROM customers
-INNER JOIN payments
-ON payments.customerNumber = customers.customerNumber
-GROUP BY customers.customerNumber
+    INNER JOIN payments ON payments.customerNumber = customers.customerNumber
+GROUP BY
+    customers.customerNumber
 ORDER BY SUM(payments.amount) DESC
 LIMIT 10;
 
 DROP VIEW `Premium Customers`;
 
 SELECT * FROM `Premium Customers`;
-
 
 # 6.
 DESCRIBE employees;
@@ -163,8 +162,9 @@ BEGIN
     ON employees.employeeNumber = customers.salesRepEmployeeNumber
     INNER JOIN orders
     ON orders.customerNumber = customers.customerNumber
+    WHERE MONTH(orders.orderDate) = mes AND YEAR(orders.orderDate) = anio
     GROUP BY employees.employeeNumber
-    ORDER BY COUNT(customers.customerNumber) DESC
+    ORDER BY COUNT(orders.customerNumber) DESC
     LIMIT 1
     INTO full_name;
 
@@ -175,4 +175,74 @@ DELIMITER;
 
 DROP FUNCTION `employee of the month`;
 
-SELECT `employee of the month`(1, 123);
+SELECT `employee of the month` (2, 2005);
+
+# 7.
+
+# Esto tiene un problema de tipos
+# Referencing column 'productCode' and referenced column 'productCode' in foreign key constraint 'Product Refillment_ibfk_1' are incompatible.
+CREATE TABLE `Product Refillment` (
+    refillmentID int NOT NULL AUTO_INCREMENT,
+    productCode int NOT NULL,
+    orderDate DATE,
+    quantity int,
+    PRIMARY KEY (refillmentID),
+    FOREIGN KEY (productCode) REFERENCES products (productCode)
+);
+
+# Miramos la table products
+DESCRIBE products;
+
+# Corregimos
+CREATE TABLE `Product Refillment` (
+    refillmentID int NOT NULL AUTO_INCREMENT,
+    productCode varchar(15) NOT NULL,
+    orderDate DATE,
+    quantity int,
+    PRIMARY KEY (refillmentID),
+    FOREIGN KEY (productCode) REFERENCES products (productCode)
+);
+
+# 8.
+DELIMITER $$
+
+CREATE TRIGGER `Restock Product`
+AFTER INSERT ON orderdetails
+FOR EACH ROW
+BEGIN
+    DECLARE quantityIS int;
+
+    SELECT quantityInStock 
+    FROM products
+    WHERE orderdetails.productCode = products.productCode
+    INTO quantityIS;
+
+	IF quantityIS - NEW.quantityOrdered < 10 THEN
+        INSERT INTO `Product Refillment` (productCode, orderDate, quantity) VALUES (
+            NEW.productCode,
+            CURRENT_DATE(),
+            10
+        );
+    END IF;
+END;
+
+DELIMITER ;
+
+select quantityInStock, productCode
+FROM products
+ORDER BY quantityInStock ASC;
+
+# El que tiene menor stock S24_2000
+
+
+# 9. IMPORTANTE: Para poder acceder con un usario y apoderarse de su rol,
+# el mismo debe utilizar 
+# SET ROLE `Nombre del rol`;
+CREATE ROLE `Empleado`;
+GRANT SELECT, CREATE VIEW ON classicmodels.* TO `Empleado`;
+
+CREATE USER Pepe IDENTIFIED BY '123456';
+GRANT Empleado TO 'Pepe'@'%';
+FLUSH PRIVILEGES;
+
+SHOW GRANTS FOR 'Pepe'@'%';
