@@ -1,0 +1,15 @@
+1. OJOOOOOO: No olvidar dejar solo lo que se pide en las queries
+
+2. Verificar que no quede código de chequeo en la entrega final.
+
+3. VERIFICAR QUE NO FALTEN 'WHERE'S EN LAS COSAS QUE PIDEN.
+
+4. Mejor usar group by antes que DISTINCT.
+
+5. Si se clava es probable que haya un 'ON' trivial (que siempre vale).
+
+6. CUIDADO CON DE QUIÉN ES LA FOREIGN KEY.
+
+7. HAY COSAS QUE SI SE PONEN EN EL 'ON' NO FUNCIONAN -----> LO CORRECTO (cuando no hay una relación de tablas) ES EN EL WHERE.
+
+8. Usar 'SHOW CREATE TABLE tabla' para foreign keys.
