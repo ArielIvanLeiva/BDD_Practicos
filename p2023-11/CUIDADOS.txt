@@ -13,3 +13,9 @@
 7. HAY COSAS QUE SI SE PONEN EN EL 'ON' NO FUNCIONAN -----> LO CORRECTO (cuando no hay una relación de tablas) ES EN EL WHERE.
 
 8. Usar 'SHOW CREATE TABLE tabla' para foreign keys.
+
+9. Tener cuidado con la toma de valores como NA en caso de haberlos.
+
+10. No confundir claves primarias con valores de filtrado.
+
+11. Pueden haber nulos que el inner join hace desaparecer!!!
