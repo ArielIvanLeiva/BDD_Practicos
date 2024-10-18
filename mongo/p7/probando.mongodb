@@ -1,0 +1,37 @@
+use('mflix')
+db.comments.findOne()
+
+db.comments.insertOne(
+    {
+        "name": "Asasda Lo",
+        "email": "andrdasasfea_le@fakegmail.com",
+        "movie_id": {
+          "$oid": "573a1390f29313caabcd418c"
+        },
+        "text": "Rem ciffiliis eaque repellendus amet eos doloribus. Porro dolor voluptatum voluptates neque culpa molestias. Voluptate unde nulla temporibus ullam.",
+        "date": {
+          "$date": new Date()
+        }
+    }
+)
+
+db.comments.findOne({"name": "Asasda Lo"})
+db.comments.find({"name": "Asasda Lo"})
+
+db.comments.deleteOne({"name": "Asasda Lo"})
+db.comments.deleteMany({"name": "Asasda Lo"})
+
+const asd = {
+  "name": "Asasda Lo",
+  "email": "andrdasasfea_le@fakegmail.com",
+  "movie_id": {
+    "$oid": "573a1390f29313caabcd418c"
+  },
+  "text": "Rem ciffiliis eaque repellendus amet eos doloribus. Porro dolor voluptatum voluptates neque culpa molestias. Voluptate unde nulla temporibus ullam.",
+  "date": {
+    "$date": new Date()
+  }
+}
+db.comments.insertOne(asd)
+
+db.comments.find().sort({_id: -1}).limit(1)
