@@ -1,147 +1,192 @@
-use("mflix")
+use("mflix");
 
 // Buscamos un usuario para saber la forma que tienen
-db.users.findOne()
+db.users.findOne();
 
 // Defino e inserto a los usuarios
-db.users.insertMany(
-  [
-    {
-      "name": "Pepito",
-      "email": "pepe@pep.ito",
-      "password": "elmalditopepito"
-    },
-    {
-      "name": "Pepoto",
-      "email": "pepe@pep.oto",
-      "password": "elmalditopepoto"
-    },
-    {
-      "name": "Papito",
-      "email": "pepe@pap.ito",
-      "password": "elmalditopapito"
-    },
-    {
-      "name": "Pepitu",
-      "email": "pepe@pep.itu",
-      "password": "elmalditopepitu"
-    },
-    {
-      "name": "Pepita",
-      "email": "pepe@pep.ita",
-      "password": "elmalditopepita"
-    }
-  ]
-)
+db.users.insertMany([
+  {
+    name: "Pepito",
+    email: "pepe@pep.ito",
+    password: "elmalditopepito",
+  },
+  {
+    name: "Pepoto",
+    email: "pepe@pep.oto",
+    password: "elmalditopepoto",
+  },
+  {
+    name: "Papito",
+    email: "pepe@pap.ito",
+    password: "elmalditopapito",
+  },
+  {
+    name: "Pepitu",
+    email: "pepe@pep.itu",
+    password: "elmalditopepitu",
+  },
+  {
+    name: "Pepita",
+    email: "pepe@pep.ita",
+    password: "elmalditopepita",
+  },
+]);
 
-db.users.find().sort({ _id: -1 }).limit(5)
+db.users.find().sort({ _id: -1 }).limit(5);
 
 // Busco a Pepito
-db.users.findOne({ "name": "Pepito", "email": "pepe@pep.ito" })
+db.users.findOne({ name: "Pepito", email: "pepe@pep.ito" });
 
 // Busco a todos los Pep
-db.users.find({ "name": { $regex: /^Pep/ } })
+db.users.find({ name: { $regex: /^Pep/ } });
 
-db.users.deleteOne({ "name": "Pepito" })
+db.users.deleteOne({ name: "Pepito" });
 
 // Buscamos un comentario para conocer su estructura
-db.comments.findOne()
+db.comments.findOne();
 
-db.comments.insertMany(
-  [
-    {
-      "name": "Pepito",
-      "email": "pepe@pep.ito",
-      "password": "elmalditopepito",
-      "movie_id": {
-        "$oid": "573a1390f29313caabcd418c"
-      },
-      "text": "Comentario",
-      "date": {
-        "$date": "2012-03-26T23:20:16Z"
-      }
-    },
-    {
-      "name": "Pepoto",
-      "email": "pepe@pep.oto",
-      "password": "elmalditopepoto",
-      "movie_id": {
-        "$oid": "573a1390f29313caabcd418c"
-      },
-      "text": "La verdad, una cagada",
-      "date": {
-        "$date": "2012-03-26T23:20:16Z"
-      }
-    },
-    {
-      "name": "Papito",
-      "email": "pepe@pap.ito",
-      "password": "elmalditopapito",
-      "movie_id": {
-        "$oid": "573a1390f29313caabcd418c"
-      },
-      "text": "Malísima",
-      "date": {
-        "$date": "2012-03-26T23:20:16Z"
-      }
-    },
-    {
-      "name": "Pepitu",
-      "email": "pepe@pep.itu",
-      "password": "elmalditopepitu",
-      "movie_id": {
-        "$oid": "573a1390f29313caabcd418c"
-      },
-      "text": "Re buena, igual que chorizo con dulce de leche.",
-      "date": {
-        "$date": "2012-03-26T23:20:16Z"
-      }
-    },
-    {
-      "name": "Pepita",
-      "email": "pepe@pep.ita",
-      "password": "elmalditopepita",
-      "movie_id": {
-        "$oid": "573a1390f29313caabcd418c"
-      },
-      "text": "Parece buena, pero es mala.",
-      "date": {
-        "$date": "2012-03-26T23:20:16Z"
-      }
-    }
-  ]
-)
-
-db.users.deleteOne({ "name": "Pepito" })
-
-db.comments.insertOne(
+db.comments.insertMany([
   {
-    "name": "Pepito",
-    "email": "pepe@pep.ito"
-  }
-)
+    name: "Pepito",
+    email: "pepe@pep.ito",
+    password: "elmalditopepito",
+    movie_id: ObjectId("573a1390f29313caabcd418c"),
+    text: "Comentario",
+    date: new Date(),
+  },
+  {
+    name: "Pepoto",
+    email: "pepe@pep.oto",
+    password: "elmalditopepoto",
+    movie_id: ObjectId("573a1390f29313caabcd418c"),
+    text: "La verdad, una cagada",
+    date: {
+      $date: new Date(),
+    },
+  },
+  {
+    name: "Papito",
+    email: "pepe@pap.ito",
+    password: "elmalditopapito",
+    movie_id: ObjectId("573a1390f29313caabcd418c"),
+    text: "Malísima",
+    date: {
+      $date: new Date(),
+    },
+  },
+  {
+    name: "Pepitu",
+    email: "pepe@pep.itu",
+    password: "elmalditopepitu",
+    movie_id: ObjectId("573a1390f29313caabcd418c"),
+    text: "Re buena, igual que chorizo con dulce de leche.",
+    date: {
+      $date: new Date(),
+    },
+  },
+  {
+    name: "Pepita",
+    email: "pepe@pep.ita",
+    password: "elmalditopepita",
+    movie_id: ObjectId("573a1390f29313caabcd418c"),
+    text: "Parece buena, pero es mala.",
+    date: {
+      $date: new Date(),
+    },
+  },
+]);
+
+db.users.deleteOne({ name: "Pepito" });
+
+db.comments.insertOne({
+  name: "Pepito",
+  email: "pepe@pep.ito",
+});
 
 // Revisamos los comentarios insertados
-db.comments.find().sort({ _id: -1 }).limit(5)
-
+const inserted_cmts = db.comments.find().sort({ _id: -1 }).limit(5).toArray();
+const ids_to_delete = inserted_cmts.map((cmt) => cmt._id);
+db.comments.deleteMany({
+  _id: { $in: ids_to_delete },
+});
 
 // --------------------------------------------
 // 2
-db.movies.findOne()
+db.movies.findOne();
 
-db.movies.find(
-  {
-    "year": {
-      $gte: 1990, $lte: 1999 
+db.movies
+  .find(
+    {
+      year: {
+        $gte: 1990,
+        $lte: 1999,
+      },
+      "imdb.rating": { $type: "double" },
     },
-    "imdb.rating": {$type: "double"}
+    {
+      title: 1,
+      year: 1,
+      cast: 1,
+      "imdb.rating": 1,
+    }
+  )
+  .sort({ "imdb.rating": -1 })
+  .limit(10);
+
+// --------------------------------------------
+// 3
+
+db.comments.findOne();
+
+db.comments.find(
+  {
+    movie_id: ObjectId("573a1399f29313caabcee886"),
+    date: {
+      $gte: new Date("2014-01-01"),
+      $lte: new Date("2016-12-31"),
+    },
   },
   {
-    "title": 1,
-    "year": 1,
-    "cast": 1,
-    "imdb.rating": 1
+    name: 1,
+    email: 1,
+    text: 1,
+    date: 1,
   }
-)
-.sort({"imdb.rating": -1})
-.limit(10)
+);
+
+// Ahora solo contando los resultados
+db.comments.countDocuments(
+  {
+    movie_id: ObjectId("573a1399f29313caabcee886"),
+    date: {
+      $gte: new Date("2014-01-01"),
+      $lte: new Date("2016-12-31"),
+    },
+  },
+  {
+    name: 1,
+    email: 1,
+    text: 1,
+    date: 1,
+  }
+);
+
+// --------------------------------------------
+// 4
+
+db.comments
+  .find(
+    {
+      email: "patricia_good@fakegmail.com"
+    },
+    {
+      name: 1,
+      _id: 1,
+      text: 1,
+      date: 1,
+    }
+  )
+  .sort({ date: 1 })
+  .limit(3);
+
+  db.comments.find().sort({ date: 1 })
