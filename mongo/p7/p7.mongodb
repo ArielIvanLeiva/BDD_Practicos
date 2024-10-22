@@ -177,16 +177,42 @@ db.comments.countDocuments(
 db.comments
   .find(
     {
-      email: "patricia_good@fakegmail.com"
+      email: "patricia_good@fakegmail.com",
     },
     {
       name: 1,
-      _id: 1,
+      movie_id: 1,
       text: 1,
       date: 1,
     }
   )
-  .sort({ date: 1 })
+  .sort({ date: -1 })
   .limit(3);
 
-  db.comments.find().sort({ date: 1 })
+db.comments.find().sort({ date: 1 });
+
+// --------------------------------------------
+// 5
+db.movies.find(
+  {
+    genres: { $all: ["Drama", "Action"] },
+    languages: { $size: 1 },
+    $or: [
+      { "imdb.rating": { $gt: 9 } },
+      { runtime: {$gt: 180} },
+      // { $expr: { $gt: [{ $multiply: ["$runtime", 60] }, 180] } },
+    ],
+    released: {$exists: true},
+  },
+  {
+    title: 1,
+    languages: 1,
+    genres: 1,
+    released: 1,
+    "imdb.votes": 1,
+    runtime: 1
+  }
+).sort({released: 1, "imdb.votes": 1});
+
+
+db.movies.findOne()
