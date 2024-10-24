@@ -210,9 +210,80 @@ db.movies.find(
     genres: 1,
     released: 1,
     "imdb.votes": 1,
-    runtime: 1
   }
 ).sort({released: 1, "imdb.votes": 1});
 
 
 db.movies.findOne()
+
+
+// --------------------------------------------
+// 6
+db.theaters.find(
+  {
+    "location.address.state": { $in: ["CA", "NY", "TX"] },
+    "location.address.city": { $regex: /^F/ },
+  },
+  {
+    id: 1,
+    "location.address.state": 1,
+    "location.address.city": 1,
+    "location.geo.coordinates": 1,
+  }
+).sort({"location.address.state": 1, "location.address.city": 1});
+
+db.theaters.findOne()
+
+// --------------------------------------------
+// 7 https://www.mongodb.com/docs/manual/reference/operator/update/
+db.comments.updateOne(
+  {
+    _id: ObjectId("5b72236520a3277c015b3b73"),
+  },
+  {
+    $set: { text: "mi mejor comentario", date: new Date() },
+  }
+);
+
+db.comments.findOne({_id: ObjectId('5b72236520a3277c015b3b73')});
+
+// --------------------------------------------
+// 8
+db.users.updateOne(
+  {
+    email: "joel.macdonel@fakegmail.com"
+  },
+  {
+    $set: { password: "some password" },
+    $setOnInsert: { name: "Joel MacDonel" }
+  },
+  {
+    upsert: true
+  }
+);
+
+// La primera vez, se efectúa un "upsert" (semánticamente es un insert)
+// La segunda vez simplemente se matchea un documento, pero no ocurre nada más.
+
+
+db.users.findOne();
+db.users.findOne({email: "joel.macdonel@fakegmail.com"});
+
+// --------------------------------------------
+// 9
+db.comments.deleteMany({
+  email: "victor_patel@fakegmail.com",
+  date: {
+    $gte: ISODate("1980-01-01T00:00:00Z"),
+    $lt: ISODate("1981-01-01T00:00:00Z"),
+  },
+});
+
+db.comments.find({
+  date: {
+    $gte: ISODate("1980-01-01T00:00:00Z"),
+    $lt: ISODate("1981-01-01T00:00:00Z"),
+  },
+  email: "victor_patel@fakegmail.com",
+});
+db.comments.findOne({ email: "victor_patel@fakegmail.com" });
