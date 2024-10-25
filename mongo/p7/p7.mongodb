@@ -1,3 +1,4 @@
+// PARTE 1
 use("mflix");
 
 // Buscamos un usuario para saber la forma que tienen
@@ -286,4 +287,89 @@ db.comments.find({
   },
   email: "victor_patel@fakegmail.com",
 });
+
+
 db.comments.findOne({ email: "victor_patel@fakegmail.com" });
+
+// PARTE 2
+// --------------------------------------------
+// 10
+db.restaurants.find(
+  {
+    grades: {
+      $elemMatch: {
+        date: {
+          $gte: ISODate("2014-01-01T00:00:00Z"),
+          $lt: ISODate("2016-01-01T00:00:00Z"),
+        },
+        score: {$gt: 70, $lte: 90},
+      },
+    },
+  },
+  {
+    restaurant_id: 1,
+    grades: 1,
+  }
+);
+
+db.restaurants.findOne();
+
+// --------------------------------------------
+// 11
+db.restaurants.updateOne(
+  {
+    restaurant_id: "50018608",
+  },
+  {
+    $addToSet: {
+      grades: {
+        $each: [
+          {
+            date: ISODate("2019-10-10T00:00:00Z"),
+            grade: "A",
+            score: 18,
+          },
+          {
+            date: ISODate("2020-02-25T00:00:00Z"),
+            grade: "A",
+            score: 21,
+          },
+        ],
+      },
+    },
+  }
+);
+
+db.restaurants.findOne(
+  {
+    restaurant_id: "50018608"
+  }
+);
+
+// {
+//   "_id": {
+//     "$oid": "671ae65b2c0a8a70892f12ef"
+//   },
+//   "address": {
+//     "building": "11002",
+//     "coord": [
+//       -73.8318829,
+//       40.6842261
+//     ],
+//     "street": "Liberty Ave",
+//     "zipcode": "11419"
+//   },
+//   "borough": "Queens",
+//   "cuisine": "Caribbean",
+//   "grades": [
+//     {
+//       "date": {
+//         "$date": "2015-01-15T00:00:00Z"
+//       },
+//       "grade": "A",
+//       "score": 12
+//     }
+//   ],
+//   "name": "Trini Delite Roti Shop",
+//   "restaurant_id": "50018608"
+// }
