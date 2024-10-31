@@ -266,7 +266,7 @@ db.movies.aggregate([
 db.comments.findOne();
 
 
-// 10
+// 10 
 db.movies.aggregate(
   [
     {
@@ -299,13 +299,16 @@ db.comments.aggregate({
     from: "movies",
     localField: "movie_id",
     foreignField: "_id",
+    // PREGUNTAR
     pipeline: [
       {
         $match: {
-          $and: [
-            { $eq: [{ $month: "$date" }, { $month: "$$ROOT.date" }] },
-            { $eq: [{ $year: "$date" }, { $year: "$$ROOT.date" }] },
-          ],
+          $expr: {
+            $and: [
+              { $eq: [{ $month: "$date" }, { $month: "$$ROOT.date" }] },
+              { $eq: [{ $year: "$date" }, { $year: "$$ROOT.date" }] },
+            ],
+          },
         },
       },
     ],
@@ -314,3 +317,107 @@ db.comments.aggregate({
 });
 
 db.comments.findOne()
+db.movies.findOne()
+
+// 12
+
+// a. Resolver con $group y accumulators
+db.restaurants.aggregate([
+  {
+    $unwind: "$grades"
+  },
+  {
+    $group: {
+      _id: {_id: "$_id", name: "$name"},  // PREGUNTAR
+      max_score: { $max: "$grades.score" },
+      min_score: { $min: "$grades.score" },
+      sum_score: { $sum: "$grades.score" }
+    }
+  },
+  {
+    $project: {
+      _id: "$_id._id",
+      name: "$_id.name",
+      max_score: 1,
+      min_score: 1,
+      sum_score: 1
+
+    },
+  },
+]);
+
+// b. Resolver con expresiones sobre arreglos (por ejemplo, $sum) pero sin $group.
+db.restaurants.aggregate([
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      max_score: { $max: "$grades.score" },
+      min_score: { $min: "$grades.score" },
+      sum_score: { $sum: "$grades.score" },
+    },
+  },
+]);
+
+// c. Resolver como en el punto b) pero usar $reduce para calcular la puntuación total
+db.restaurants.aggregate([
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      max_score: { $max: "$grades.score" },
+      min_score: { $min: "$grades.score" },
+      sum_score: {
+        $reduce: {
+          input: "$grades",
+          initialValue: 0,
+          in: {
+            $add: ["$$value", "$$this.score"],
+          }
+        },
+      },
+    },
+  },
+]);
+
+// d. Resolver con find
+db.restaurants.find(
+  {},
+  {
+    _id: 1,
+    name: 1,
+    max_score: { $max: "$grades.score" },
+    min_score: { $min: "$grades.score" },
+    sum_score: { $sum: "$grades.score" },
+  }
+);
+
+db.restaurants.findOne()
+
+// 13.
+db.restaurants.updateMany({}, [
+  {
+    $set: {
+      average_score: { $avg: "$grades.score" },
+    },
+  },
+  {
+    $set: {
+      grade: {
+        $cond: [
+          { $and: [{ $gte: ["$score", 0] }, { $lte: ["$score", 13] }] },
+          "A",
+          {
+            $cond: [
+              { $and: [{ $gte: ["$score", 14] }, { $lte: ["$score", 27] }] },
+              "B",
+              "C"
+            ],
+          },
+        ],
+      },
+    },
+  },
+]);
+
+db.restaurants.findOne()
