@@ -1,0 +1,387 @@
+// 1
+// Especificar en la colección users las siguientes reglas de validación:
+// El campo name (requerido) debe ser un string con un máximo de 30 caracteres,
+// email (requerido) debe ser un string que matchee con la expresión regular: "^(.*)@(.*)\\.(.{2,4})$" , password
+// (requerido) debe ser un string con al menos 50 caracteres.
+db.runCommand({
+  collMod: "users",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "email", "password"],
+      properties: {
+        name: {
+          bsonType: "string",
+          maxLength: 30,
+          description: "Name of the user. Must have length less or equal 30.",
+        },
+        email: {
+          bsonType: "string",
+          pattern: "^(.*)@(.*)\\.(.{2,4})$",
+          description: "User email. Must satisfy the email format :-).",
+        },
+        password: {
+          bsonType: "string",
+          minLength: 50,
+          description: "User password. Don't put your mom's name.",
+        },
+      },
+    },
+  },
+});
+
+// Casos buenos
+db.users.insertMany([
+  {
+    name: "Ned Stork",
+    email: "asd@fwwef.com",
+    password:
+      "oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+  },
+  {
+    name: "Flaco",
+    email: "flaco@gordo.noes",
+    password:
+      "holaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola",
+  },
+]);
+
+// Casos malos
+db.users.insertMany([
+  {
+    email: "asd@ef.com",
+    password:
+      "oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+  },
+  {
+    name: "Flaco",
+    email: "flacogordo.noes",
+    password:
+      "holaholaolaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholaholahola",
+  },
+]);
+
+db.users.deleteMany({ email: "asd@fwwef.com" });
+
+db.users.findOne();
+
+// 2
+db.getCollectionInfos({ name: "users" });
+
+// 3
+db.runCommand({
+  collMod: "theaters",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["theaterId", "location"],
+      properties: {
+        theaterId: {
+          bsonType: "int",
+          description: "Id of the theater.",
+        },
+        location: {
+          bsonType: "object",
+          required: ["address"],
+          properties: {
+            address: {
+              bsonType: "object",
+              required: ["street1", "city", "state", "zipcode"],
+              properties: {
+                street1: {
+                  bsonType: "string",
+                },
+                city: {
+                  bsonType: "string",
+                },
+                state: {
+                  bsonType: "string",
+                },
+                zipcode: {
+                  bsonType: "string",
+                },
+              },
+            },
+            geo: {
+              bsonType: "object",
+              properties: {
+                type: {
+                  enum: ["Point", null],
+                },
+                coordinates: {
+                  bsonType: "array",
+                  minItems: 2,
+                  maxItems: 2,
+                  items: {
+                    bsonType: "double",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  validationAction: "warn",
+});
+
+db.getCollectionInfos({ name: "theaters" });
+db.theaters.findOne();
+
+// Casos buenos
+db.theaters.insertOne({
+  "theaterId": 1000,
+  "location": {
+    "address": {
+      "street1": "340 W Market",
+      "city": "Bloomington",
+      "state": "MN",
+      "zipcode": "55425"
+    },
+    "geo": {
+      "type": "Point",
+      "coordinates": [
+        -93.24565,
+        44.85466
+      ]
+    }
+  }
+});
+
+db.theaters.insertOne({
+  "theaterId": 1000,
+  "location": {
+    "address": {
+      "street1": "340 W Market",
+      "city": "Bloomington",
+      "state": "MN",
+      "zipcode": "55425"
+    },
+  }
+});
+
+db.theaters.insertMany([
+  {
+    theaterId: 1000,
+    location: {
+      address: {
+        street1: "Calle",
+        city: "Bloomington",
+        state: "MN",
+        zipcode: "55425",
+      },
+      geo: {
+        type: "Point",
+        coordinates: [-93.24565, 44.85466],
+      },
+    },
+  },
+  {
+    theaterId: 999999,
+    location: {
+      address: {
+        street1: "Calle",
+        city: "Bloomington",
+        state: "MN",
+        zipcode: "55425",
+      },
+      geo: {
+        type: "Point",
+        coordinates: [-93.24565, 44.85466],
+      },
+    },
+  },
+]);
+
+db.getCollectionInfos({name: "theaters"})
+
+// Casos malos
+db.theaters.insertOne({
+  theaterId: 1000.6,
+  location: {
+    address: {
+      street1: "Calle",
+      city: "Bloomington",
+      state: "MN",
+      zipcode: "55425",
+    },
+    geo: {
+      type: "Point",
+      coordinates: [-93.24565, 44.85466],
+    },
+  },
+});
+
+db.theaters.insertOne({
+  theaterId: 999999,
+  location: {
+    address: {
+      street1: "Calle",
+      city: "Bloomington",
+      state: "MN",
+      zipcode: "55425",
+    },
+    geo: {
+      type: "Point",
+      coordinates: [-93.24565],
+    },
+  },
+});
+
+// 4
+db.runCommand({
+  collMod: "movies",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["title", "year"],
+      properties: {
+        title: {
+          bsonType: "string",
+        },
+        year: {
+          bsonType: "int",
+          minimum: 1900,
+          maximum: 3000
+        },
+        cast: {
+          bsonType: "array",
+          uniqueItems: true,
+          items: {
+            bsonType: "string"
+          }
+        },
+        directors: {
+          bsonType: "array",
+          uniqueItems: true,
+          items: {
+            bsonType: "string"
+          }
+        },
+        countries: {
+          bsonType: "array",
+          uniqueItems: true,
+          items: {
+            bsonType: "string"
+          }
+        }
+      },
+    },
+  },
+})
+
+// Casos buenos
+db.movies.insertOne({
+  "title": "Carmencita",
+  "year": NumberInt(1902),
+  "runtime": 1,
+  "cast": [
+    "Carmencita"
+  ],
+  "poster": "http://ia.media-imdb.com/images/M/MV5BMjAzNDEwMzk3OV5BMl5BanBnXkFtZTcwOTk4OTM5Ng@@._V1_SX300.jpg",
+  "plot": "Performing on what looks like a small wooden stage, wearing a dress with a hoop skirt and white high-heeled pumps, Carmencita does a dance with kicks and twirls, a smile always on her face.",
+  "fullplot": "Performing on what looks like a small wooden stage, wearing a dress with a hoop skirt and white high-heeled pumps, Carmencita does a dance with kicks and twirls, a smile always on her face.",
+  "lastupdated": "2015-08-26 00:03:45.040000000",
+  "type": "movie",
+  "directors": [
+    "William K.L. Dickson"
+  ],
+  "imdb": {
+    "rating": 5.9,
+    "votes": 1032,
+    "id": 1
+  },
+  "countries": [
+    "USA"
+  ],
+  "rated": "NOT RATED",
+  "genres": [
+    "Documentary",
+    "Short"
+  ]
+});
+
+db.movies.insertOne({
+  "title": "Carmencita",
+  "year": 1900,
+  "cast": [
+    "Carmencita"
+  ],
+  "directors": [
+    "William K.L. Dickson"
+  ],
+  "countries": [
+    "USA"
+  ],
+});
+
+db.movies.insertOne({
+  "title": "Carmencita",
+  "year": 1900,
+  "cast": [
+    "Carmencita"
+  ],
+  "countries": [
+    "USA"
+  ],
+});
+
+// Casos malos
+db.movies.insertOne({
+  "title": "Carmencita",
+  "year": 1900.3,
+  "cast": [
+    "Carmencita"
+  ],
+  "directors": [
+    "William K.L. Dickson"
+  ],
+  "countries": [
+    "USA"
+  ],
+});
+
+db.movies.insertOne({
+  "title": "Carmencita",
+  "cast": [
+    "Carmencita"
+  ],
+  "directors": [
+    "William K.L. Dickson"
+  ],
+  "countries": [
+    "USA"
+  ],
+});
+
+db.movies.insertOne({
+  "title": "Carmencita",
+  "year": 1900,
+  "cast": [
+    "Carmencita"
+  ],
+  "directors": [
+    69
+  ],
+  "countries": [
+    "USA"
+  ],
+});
+
+db.movies.insertOne({
+  "title": "Carmencita",
+  "year": 1900,
+  "cast": [
+    "Carmencita"
+  ],
+  "directors": [
+    "William K.L. Dickson"
+  ],
+  "countries": [
+    "USA",
+    "Japan"
+  ],
+});
+
+db.movies.findOne()

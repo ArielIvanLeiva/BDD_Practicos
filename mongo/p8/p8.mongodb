@@ -328,7 +328,7 @@ db.restaurants.aggregate([
   },
   {
     $group: {
-      _id: {_id: "$_id", name: "$name"},  // PREGUNTAR
+      _id: {_id: "$_id", name: "$name"},  // Mejor hacer como está abajo
       max_score: { $max: "$grades.score" },
       min_score: { $min: "$grades.score" },
       sum_score: { $sum: "$grades.score" }
@@ -338,6 +338,31 @@ db.restaurants.aggregate([
     $project: {
       _id: "$_id._id",
       name: "$_id.name",
+      max_score: 1,
+      min_score: 1,
+      sum_score: 1
+
+    },
+  },
+]);
+
+db.restaurants.aggregate([
+  {
+    $unwind: "$grades"
+  },
+  {
+    $group: {
+      _id: "$_id",
+      name: { $first: "$name" },
+      max_score: { $max: "$grades.score" },
+      min_score: { $min: "$grades.score" },
+      sum_score: { $sum: "$grades.score" }
+    }
+  },
+  {
+    $project: {
+      _id: 1,
+      name: 1,
       max_score: 1,
       min_score: 1,
       sum_score: 1
@@ -415,6 +440,27 @@ db.restaurants.updateMany({}, [
             ],
           },
         ],
+      },
+    },
+  },
+]);
+
+db.restaurants.updateMany({}, [
+  {
+    $set: {
+      average_score: { $avg: "$grades.score" },
+    },
+  },
+  {
+    $set: {
+      grade: {
+        $switch: {
+          branches: [
+            { case: { $and: [{ $gte: ["$score", 0] }, { $lte: ["$score", 13] }] }, then: "A" },
+            { case: { $and: [{ $gte: ["$score", 14] }, { $lte: ["$score", 27] }] }, then: "B"},
+          ],
+          default: "C"
+        }
       },
     },
   },
