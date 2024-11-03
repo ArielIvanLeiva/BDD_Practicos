@@ -493,3 +493,330 @@ db.comments.findOne();
 // En general las relaciones entre movies y comments son One-To-Many, representando la misma
 // a través del atributo "movie_id" dentro de un comentario, que "referencia" (semánticamente)
 // a una película (que al menos semánticamente se supone unívocamente determinada).
+
+// 7
+use("shop");
+
+db.createCollection("orders");
+// Por si quisieramos borrar/deleteear/dropear la collección
+db.orders.drop();
+
+db.runCommand({
+  collMod: "orders",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: [
+        "delivery_name",
+        "delivery_address",
+        "cc_name",
+        "cc_number",
+        "cc_expiry",
+      ],
+      properties: {
+        delivery_name: {
+          bsonType: "string",
+          maxLength: 70,
+        },
+        delivery_address: {
+          bsonType: "string",
+          maxLength: 70,
+        },
+        cc_name: {
+          bsonType: "string",
+          maxLength: 70,
+        },
+        cc_number: {
+          bsonType: "string",
+          maxLength: 32,
+        },
+        cc_expiry: {
+          bsonType: "string",
+          maxLength: 20,
+        },
+        order_details: {
+          bsonType: "array",
+          uniqueItems: true,
+          items: {
+            bsonType: "object",
+            required: ["book_id", "title", "author", "quantity", "price"],
+            properties: {
+              book_id: {
+                bsonType: "objectId",
+              },
+              title: {
+                bsonType: "string",
+                maxLength: 70,
+              },
+              author: {
+                bsonType: "string",
+                maxLength: 70,
+              },
+              quantity: {
+                bsonType: "int",
+              },
+              price: {
+                bsonType: "double",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+});
+
+db.createCollection("order_details");
+db.runCommand({
+  collMod: "order_details",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["book_id", "title", "author", "quantity", "price"],
+      properties: {
+        book_id: {
+          bsonType: "int",
+        },
+        title: {
+          bsonType: "string",
+          maxLength: 70,
+        },
+        author: {
+          bsonType: "string",
+          maxLength: 70,
+        },
+        quantity: {
+          bsonType: "int",
+        },
+        price: {
+          bsonType: "double",
+        },
+      },
+    },
+  },
+});
+
+db.createCollection("books");
+
+db.runCommand({
+  collMod: "books",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["title", "author", "price", "category"],
+      properties: {
+        title: {
+          bsonType: "string",
+          maxLength: 70,
+        },
+        author: {
+          bsonType: "string",
+          maxLength: 70,
+        },
+        price: {
+          bsonType: "double",
+        },
+        category: {
+          bsonType: "object",
+          required: ["category_id", "category_name"],
+          properties: {
+            category_id: {
+              bsonType: "objectId",
+            },
+            category_name: {
+              bsonType: "string",
+              maxLength: 70,
+            },
+          },
+        },
+      },
+    },
+  },
+});
+
+db.getCollectionNames();
+
+// Agregando algunos elems
+db.books.insertMany([
+  {
+    title: "Juancito y Juan",
+    author: "Juan",
+    price: Double(666),
+    category: {
+      category_id: ObjectId("123412341234123412341234"),
+      category_name: "Paleolítico",
+    },
+  },
+  {
+    title: "Juana y Juan",
+    author: "Juan",
+    price: Double(777),
+    category: {
+      category_id: ObjectId("432143214321432143214321"),
+      category_name: "Monolítico",
+    },
+  },
+]);
+
+db.books.insertMany([
+  {
+    title: "Pepito y Pepe",
+    author: "Pepe",
+    price: Double(666),
+    category: {
+      category_id: ObjectId("123456781234567812345678"),
+      category_name: "Microkernel",
+    },
+  },
+  {
+    title: "Pepa y Pepe",
+    author: "Pepe",
+    price: Double(777),
+    category: {
+      category_id: ObjectId("432143214321432143214321"),
+      category_name: "Monolítico",
+    },
+  },
+]);
+
+db.books.find();
+db.books.deleteMany({});
+
+// db.order_details.insertMany([
+//   {
+//     book_id: ObjectId("6727815ce91a8076aa6a6ad5"), // Pepito y Pepe
+//     title: "Detalles de la orden de Pepito",
+//     author: "Pepito",
+//     quantity: 250,
+//     price: 123.123,
+//   },
+//   {
+//     book_id: ObjectId("6727815ce91a8076aa6a6ad5"), // Pepito y Pepe
+//     title: "Detalles de la orden de Pepito",
+//     author: "Pepito",
+//     quantity: 300,
+//     price: 123.123,
+//   },
+//   {
+//     book_id: ObjectId("6727815ce91a8076aa6a6ad6"), // Pepa y Pepe
+//     title: "Detalles de la orden de Pepa",
+//     author: "Pepa",
+//     quantity: 999,
+//     price: 333.333,
+//   },
+// ]);
+
+db.order_details.find();
+db.order_details.drop();
+db.order_details.deleteMany({});
+
+db.orders.insertMany([
+  {
+    delivery_name: "Carlos",
+    delivery_address: "Casa de Silvia",
+    cc_name: "WA",
+    cc_number: "13 ÒwÓ",
+    cc_expiry: "SD",
+  },
+  {
+    delivery_name: "Carlos",
+    delivery_address: "Casa de Silvia",
+    cc_name: "WA",
+    cc_number: "14 ÒwÓ",
+    cc_expiry: "SD",
+    order_details: [
+      {
+        book_id: ObjectId("6727815ce91a8076aa6a6ad5"), // Pepito y Pepe
+        title: "Detalles de la orden de Pepito",
+        author: "Pepito",
+        quantity: 300,
+        price: 123.123,
+      },
+      {
+        book_id: ObjectId("6727815ce91a8076aa6a6ad6"), // Pepa y Pepe
+        title: "Detalles de la orden de Pepa",
+        author: "Pepa",
+        quantity: 999,
+        price: 333.333,
+      },
+    ],
+  },
+]);
+
+db.orders.find();
+db.orders.deleteMany({});
+db.getCollectionInfos({ name: "orders" });
+
+// I.
+db.books.aggregate({
+  $group: {
+    _id: "$author",
+    books: {
+      $addToSet: {
+        _id: "$_id",
+        title: "$title",
+        price: "$price",
+        category: "$category",
+      },
+    },
+  },
+});
+
+// II.
+db.books.aggregate({
+  $group: {
+    _id: "$category.category_id",
+    category_name: { $first: "$category.category_name" },
+    num_of_books: { $sum: 1 },
+  },
+});
+
+// III.
+const order_id = ObjectId("67278b2ebcdfef32922b93ce");
+db.orders.aggregate([
+  {
+    $match: {
+      _id: order_id,
+    },
+  },
+  {
+    $addFields: {
+      total_prices: {
+        $map: {
+          input: "$order_details",
+          as: "order_detail",
+          in: { $multiply: ["$$order_detail.price", "$$order_detail.quantity"] }
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      delivery_name: 1,
+      delivery_address: 1,
+      total_price: {
+        $sum: "$total_prices",
+      },
+    },
+  },
+]);
+
+const order_id = ObjectId("67278b2ebcdfef32922b93ce");
+db.orders.aggregate([
+  {
+    $match: {
+      _id: order_id,
+    },
+  },
+  {
+    $project: {
+      total_prices: {
+        $map: {
+          input: "$order_details",
+          as: "order_detail",
+          in: { $multiply: ["$$order_detail.price", "$$order_detail.quantity"] }
+        }
+      }
+    }
+  }
+]);
