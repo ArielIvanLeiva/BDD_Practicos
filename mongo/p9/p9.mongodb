@@ -131,34 +131,31 @@ db.theaters.findOne();
 
 // Casos buenos
 db.theaters.insertOne({
-  "theaterId": 1000,
-  "location": {
-    "address": {
-      "street1": "340 W Market",
-      "city": "Bloomington",
-      "state": "MN",
-      "zipcode": "55425"
+  theaterId: 1000,
+  location: {
+    address: {
+      street1: "340 W Market",
+      city: "Bloomington",
+      state: "MN",
+      zipcode: "55425",
     },
-    "geo": {
-      "type": "Point",
-      "coordinates": [
-        -93.24565,
-        44.85466
-      ]
-    }
-  }
+    geo: {
+      type: "Point",
+      coordinates: [-93.24565, 44.85466],
+    },
+  },
 });
 
 db.theaters.insertOne({
-  "theaterId": 1000,
-  "location": {
-    "address": {
-      "street1": "340 W Market",
-      "city": "Bloomington",
-      "state": "MN",
-      "zipcode": "55425"
+  theaterId: 1000,
+  location: {
+    address: {
+      street1: "340 W Market",
+      city: "Bloomington",
+      state: "MN",
+      zipcode: "55425",
     },
-  }
+  },
 });
 
 db.theaters.insertMany([
@@ -194,7 +191,7 @@ db.theaters.insertMany([
   },
 ]);
 
-db.getCollectionInfos({name: "theaters"})
+db.getCollectionInfos({ name: "theaters" });
 
 // Casos malos
 db.theaters.insertOne({
@@ -243,152 +240,108 @@ db.runCommand({
         year: {
           bsonType: "int",
           minimum: 1900,
-          maximum: 3000
+          maximum: 3000,
         },
         cast: {
           bsonType: "array",
           uniqueItems: true,
           items: {
-            bsonType: "string"
-          }
+            bsonType: "string",
+          },
         },
         directors: {
           bsonType: "array",
           uniqueItems: true,
           items: {
-            bsonType: "string"
-          }
+            bsonType: "string",
+          },
         },
         countries: {
           bsonType: "array",
           uniqueItems: true,
           items: {
-            bsonType: "string"
-          }
-        }
+            bsonType: "string",
+          },
+        },
       },
     },
   },
-})
+});
 
 // Casos buenos
 db.movies.insertOne({
-  "title": "Carmencita",
-  "year": NumberInt(1902),
-  "runtime": 1,
-  "cast": [
-    "Carmencita"
-  ],
-  "poster": "http://ia.media-imdb.com/images/M/MV5BMjAzNDEwMzk3OV5BMl5BanBnXkFtZTcwOTk4OTM5Ng@@._V1_SX300.jpg",
-  "plot": "Performing on what looks like a small wooden stage, wearing a dress with a hoop skirt and white high-heeled pumps, Carmencita does a dance with kicks and twirls, a smile always on her face.",
-  "fullplot": "Performing on what looks like a small wooden stage, wearing a dress with a hoop skirt and white high-heeled pumps, Carmencita does a dance with kicks and twirls, a smile always on her face.",
-  "lastupdated": "2015-08-26 00:03:45.040000000",
-  "type": "movie",
-  "directors": [
-    "William K.L. Dickson"
-  ],
-  "imdb": {
-    "rating": 5.9,
-    "votes": 1032,
-    "id": 1
+  title: "Carmencita",
+  year: NumberInt(1902),
+  runtime: 1,
+  cast: ["Carmencita"],
+  poster:
+    "http://ia.media-imdb.com/images/M/MV5BMjAzNDEwMzk3OV5BMl5BanBnXkFtZTcwOTk4OTM5Ng@@._V1_SX300.jpg",
+  plot: "Performing on what looks like a small wooden stage, wearing a dress with a hoop skirt and white high-heeled pumps, Carmencita does a dance with kicks and twirls, a smile always on her face.",
+  fullplot:
+    "Performing on what looks like a small wooden stage, wearing a dress with a hoop skirt and white high-heeled pumps, Carmencita does a dance with kicks and twirls, a smile always on her face.",
+  lastupdated: "2015-08-26 00:03:45.040000000",
+  type: "movie",
+  directors: ["William K.L. Dickson"],
+  imdb: {
+    rating: 5.9,
+    votes: 1032,
+    id: 1,
   },
-  "countries": [
-    "USA"
-  ],
-  "rated": "NOT RATED",
-  "genres": [
-    "Documentary",
-    "Short"
-  ]
+  countries: ["USA"],
+  rated: "NOT RATED",
+  genres: ["Documentary", "Short"],
 });
 
 db.movies.insertOne({
-  "title": "Carmencita",
-  "year": 1900,
-  "cast": [
-    "Carmencita"
-  ],
-  "directors": [
-    "William K.L. Dickson"
-  ],
-  "countries": [
-    "USA"
-  ],
+  title: "Carmencita",
+  year: 1900,
+  cast: ["Carmencita"],
+  directors: ["William K.L. Dickson"],
+  countries: ["USA"],
 });
 
 db.movies.insertOne({
-  "title": "Carmencita",
-  "year": 1900,
-  "cast": [
-    "Carmencita"
-  ],
-  "countries": [
-    "USA"
-  ],
+  title: "Carmencita",
+  year: 1900,
+  cast: ["Carmencita"],
+  countries: ["USA"],
 });
 
 // Casos malos
 db.movies.insertOne({
-  "title": "Carmencita",
-  "year": 1900.3,
-  "cast": [
-    "Carmencita"
-  ],
-  "directors": [
-    "William K.L. Dickson"
-  ],
-  "countries": [
-    "USA"
-  ],
+  title: "Carmencita",
+  year: 1900.3,
+  cast: ["Carmencita"],
+  directors: ["William K.L. Dickson"],
+  countries: ["USA"],
 });
 
 db.movies.insertOne({
-  "title": "Carmencita",
-  "cast": [
-    "Carmencita"
-  ],
-  "directors": [
-    "William K.L. Dickson"
-  ],
-  "countries": [
-    "USA"
-  ],
+  title: "Carmencita",
+  cast: ["Carmencita"],
+  directors: ["William K.L. Dickson"],
+  countries: ["USA"],
 });
 
 db.movies.insertOne({
-  "title": "Carmencita",
-  "year": 1900,
-  "cast": [
-    "Carmencita"
-  ],
-  "directors": [
-    69
-  ],
-  "countries": [
-    "USA"
-  ],
+  title: "Carmencita",
+  year: 1900,
+  cast: ["Carmencita"],
+  directors: [69],
+  countries: ["USA"],
 });
 
 db.movies.insertOne({
-  "title": "Carmencita",
-  "year": 1900,
-  "cast": [
-    "Carmencita"
-  ],
-  "directors": [
-    "William K.L. Dickson"
-  ],
-  "countries": [
-    "USA",
-    "Japan",
-    "USA"
-  ],
+  title: "Carmencita",
+  year: 1900,
+  cast: ["Carmencita"],
+  directors: ["William K.L. Dickson"],
+  countries: ["USA", "Japan", "USA"],
 });
 
 // 5
 db.createCollection("userProfiles");
-db.getCollectionNames()
-
+db.getCollectionNames();
 
 db.runCommand({
   collMod: "userProfiles",
@@ -416,90 +369,78 @@ db.runCommand({
 });
 
 // Casos buenos
-db.userProfiles.insertOne(
-  {
-    user_id: ObjectId('123456781234567812345678'),
-    language: "Spanish",
-    favorite_genres: [
-      "Juan",
-      "Hoy ha sido un buen día",
-      "Mañana será un día de mierda",
-      "Pasado mañana será otro día"
-    ]
-  }
-);
+db.userProfiles.insertOne({
+  user_id: ObjectId("123456781234567812345678"),
+  language: "Spanish",
+  favorite_genres: [
+    "Juan",
+    "Hoy ha sido un buen día",
+    "Mañana será un día de mierda",
+    "Pasado mañana será otro día",
+  ],
+});
 
-db.userProfiles.insertOne(
-  {
-    user_id: ObjectId('123456781234567812345678'),
-    language: "Spanish",
-  }
-);
+db.userProfiles.insertOne({
+  user_id: ObjectId("123456781234567812345678"),
+  language: "Spanish",
+});
 
 // Casos malos
-db.userProfiles.insertOne(
-  {
-    language: "Spanish",
-    favorite_genres: [
-      "Juan",
-      "Hoy ha sido un buen día",
-      "Mañana será un día de mierda",
-      "Pasado mañana será otro día"
-    ]
-  }
-);
+db.userProfiles.insertOne({
+  language: "Spanish",
+  favorite_genres: [
+    "Juan",
+    "Hoy ha sido un buen día",
+    "Mañana será un día de mierda",
+    "Pasado mañana será otro día",
+  ],
+});
 
-db.userProfiles.insertOne(
-  {
-    user_id: ObjectId('123456781234567812345678'),
-    favorite_genres: [
-      "Juan",
-      "Hoy ha sido un buen día",
-      "Mañana será un día de mierda",
-      "Pasado mañana será otro día"
-    ]
-  }
-);
+db.userProfiles.insertOne({
+  user_id: ObjectId("123456781234567812345678"),
+  favorite_genres: [
+    "Juan",
+    "Hoy ha sido un buen día",
+    "Mañana será un día de mierda",
+    "Pasado mañana será otro día",
+  ],
+});
 
-db.userProfiles.insertOne(
-  {
-    user_id: ObjectId('123456781234567812345678'),
-    language: "Español",
-    favorite_genres: [
-      "Juan",
-      "Hoy ha sido un buen día",
-      "Mañana será un día de mierda",
-      "Pasado mañana será otro día"
-    ]
-  }
-);
+db.userProfiles.insertOne({
+  user_id: ObjectId("123456781234567812345678"),
+  language: "Español",
+  favorite_genres: [
+    "Juan",
+    "Hoy ha sido un buen día",
+    "Mañana será un día de mierda",
+    "Pasado mañana será otro día",
+  ],
+});
 
-db.userProfiles.insertOne(
-  {
-    user_id: ObjectId('000000000000000000000000'),
-    language: "Portuguese",
-    favorite_genres: [
-      "Juan",
-      "Hoy ha sido un buen día",
-      "Mañana será un día de mierda",
-      "Pasado mañana será otro día",
-      "Juan"
-    ]
-  }
-);
+db.userProfiles.insertOne({
+  user_id: ObjectId("000000000000000000000000"),
+  language: "Portuguese",
+  favorite_genres: [
+    "Juan",
+    "Hoy ha sido un buen día",
+    "Mañana será un día de mierda",
+    "Pasado mañana será otro día",
+    "Juan",
+  ],
+});
 
 db.userProfiles.find();
-db.getCollectionInfos({ name: "userProfiles" })
+db.getCollectionInfos({ name: "userProfiles" });
 
 // 6
 db.getCollectionInfos({
   name: {
-    $in: ["movies", "comments"]
-  }
-})
+    $in: ["movies", "comments"],
+  },
+});
 
-db.movies.findOne()
-db.comments.findOne()
+db.movies.findOne();
+db.comments.findOne();
 
 // {
 //   "_id": {
