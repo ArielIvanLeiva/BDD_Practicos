@@ -785,10 +785,12 @@ db.orders.aggregate([
         $map: {
           input: "$order_details",
           as: "order_detail",
-          in: { $multiply: ["$$order_detail.price", "$$order_detail.quantity"] }
-        }
-      }
-    }
+          in: {
+            $multiply: ["$$order_detail.price", "$$order_detail.quantity"],
+          },
+        },
+      },
+    },
   },
   {
     $project: {
@@ -814,9 +816,271 @@ db.orders.aggregate([
         $map: {
           input: "$order_details",
           as: "order_detail",
-          in: { $multiply: ["$$order_detail.price", "$$order_detail.quantity"] }
-        }
-      }
-    }
-  }
+          in: {
+            $multiply: ["$$order_detail.price", "$$order_detail.quantity"],
+          },
+        },
+      },
+    },
+  },
 ]);
+
+// 8
+// a
+
+// Primer modelado (full referencias)
+use("articles");
+
+db.createCollection("users");
+db.runCommand({
+  collMod: "users",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "email"],
+      properties: {
+        name: {
+          bsonType: "string",
+        },
+        email: {
+          bsonType: "string",
+        },
+      },
+    },
+  },
+});
+
+db.createCollection("categories");
+db.runCommand({
+  collMod: "categories",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "article_id"],
+      properties: {
+        name: {
+          bsonType: "string",
+        },
+        article_id: {
+          bsonType: "objectId",
+        },
+      },
+    },
+    // Para evitar que un documento tenga props de más: additionalProperties: false,
+  },
+});
+
+db.createCollection("tags");
+db.runCommand({
+  collMod: "tags",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name"],
+      properties: {
+        name: {
+          bsonType: "string",
+        },
+      },
+    },
+  },
+});
+
+db.createCollection("comments");
+db.runCommand({
+  collMod: "comments",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["user_id", "date", "text"],
+      properties: {
+        user_id: {
+          bsonType: "objectId",
+        },
+        date: {
+          bsonType: "date",
+        },
+        text: {
+          bsonType: "string",
+        },
+      },
+    },
+  },
+});
+
+db.createCollection("articles");
+db.runCommand({
+  collMod: "articles",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["user_id", "title", "date", "text", "url"],
+      properties: {
+        user_id: {
+          bsonType: "objectId",
+        },
+        title: {
+          bsonType: "string",
+        },
+        date: {
+          bsonType: "date",
+        },
+        text: {
+          bsonType: "string",
+        },
+        url: {
+          bsonType: "string",
+        },
+      },
+    },
+  },
+});
+
+db.getCollectionInfos();
+
+// TODO: Terminar punto a
+
+// b
+use("articles");
+
+db.createCollection("users");
+db.runCommand({
+  collMod: "users",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "email"],
+      properties: {
+        name: {
+          bsonType: "string",
+        },
+        email: {
+          bsonType: "string",
+        },
+      },
+    },
+  },
+});
+
+db.createCollection("categories");
+db.runCommand({
+  collMod: "categories",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "article_id"],
+      properties: {
+        name: {
+          bsonType: "string",
+        },
+        article_id: {
+          bsonType: "objectId",
+        },
+      },
+    },
+    // Para evitar que un documento tenga props de más: additionalProperties: false,
+  },
+});
+
+db.createCollection("tags");
+db.runCommand({
+  collMod: "tags",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name"],
+      properties: {
+        name: {
+          bsonType: "string",
+        },
+      },
+    },
+  },
+});
+
+db.createCollection("comments");
+db.runCommand({
+  collMod: "comments",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["user_id", "article_id", "date", "text"],
+      properties: {
+        user_id: {
+          bsonType: "objectId",
+        },
+        article_id: {
+          bsonType: "objectId",
+        },
+        date: {
+          bsonType: "date",
+        },
+        text: {
+          bsonType: "string",
+        },
+      },
+    },
+  },
+});
+
+db.createCollection("articles");
+db.runCommand({
+  collMod: "articles",
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["user_id", "title", "date", "text", "url"],
+      properties: {
+        user_id: {
+          bsonType: "objectId",
+        },
+        title: {
+          bsonType: "string",
+        },
+        date: {
+          bsonType: "date",
+        },
+        text: {
+          bsonType: "string",
+        },
+        url: {
+          bsonType: "string",
+        },
+        categories: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["category_id", "name"],
+            properties: {
+              // OJO CON ESTO, PUEDE SER IMPORTANTE TENER EL ID
+              category_id: {
+                bsonType: "objectId",
+              },
+              name: {
+                bsonType: "string",
+              },
+            },
+          },
+        },
+        tags: {
+          bsonType: "array",
+          items: {
+            bsonType: "object",
+            required: ["tag_id", "name"],
+            properties: {
+              // OJO CON ESTO, PUEDE SER IMPORTANTE TENER EL ID
+              tag_id: {
+                bsonType: "objectId",
+              },
+              name: {
+                bsonType: "string",
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+});
+
+db.getCollectionInfos();
